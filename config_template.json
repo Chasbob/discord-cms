@@ -1,0 +1,10 @@
+{
+  "discord": {
+    "token": "${TOKEN}",
+    "server_id": "${SERVER_ID}",
+    "command_prefix": "-"
+  },
+  "database": {
+    "url": "${DATABASE_URL}"
+  }
+}
