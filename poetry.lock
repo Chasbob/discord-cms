@@ -70,6 +70,14 @@ version = "0.4.3"
 
 [[package]]
 category = "main"
+description = "A package allowing you to display interactive help in Discord easily"
+name = "discord-interactive"
+optional = false
+python-versions = "*"
+version = "4.0"
+
+[[package]]
+category = "main"
 description = "A Python wrapper for the Discord API"
 name = "discord.py"
 optional = false
@@ -208,7 +216,7 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [metadata]
-content-hash = "16c21f3dc35c689fde40a8b815a1295ea59069ad90ca5ef209a17b9ac16043de"
+content-hash = "1100f15ad4f1e9d9bbf2af20244b4cf14e787cdb091e329f79fe3087ab65e112"
 lock-version = "1.0"
 python-versions = "^3.8"
 
@@ -246,6 +254,9 @@ chardet = [
 colorama = [
     {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
+]
+discord-interactive = [
+    {file = "discord_interactive-4.0.tar.gz", hash = "sha256:5a307b3fb9801a1b4479482010c62b0cb14c87964cb3c6a1a52fee7d162d0bad"},
 ]
 "discord.py" = [
     {file = "discord.py-1.4.1-py3-none-any.whl", hash = "sha256:98ea3096a3585c9c379209926f530808f5fcf4930928d8cfb579d2562d119570"},

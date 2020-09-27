@@ -26,6 +26,7 @@ class Post(Base):
     __tablename__ = "posts"
 
     id = Column(Integer, primary_key=True)
+    name = Column(String, unique=False)
     channel = Column(String, unique=False, index=True)
     message = Column(String, unique=True, index=True)
     user = Column(Integer, ForeignKey('users'))
