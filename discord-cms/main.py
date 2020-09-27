@@ -8,10 +8,10 @@ config.init()
 
 from .bot import bot
 
-logger = logging.getLogger('text-chat-bot')
+logger = logging.getLogger('cms-bot')
 VERSION = '0.1.0-beta.1'
 
 
 def init():
-    logger.info(f'Starting text-chat-bot v{VERSION}')
+    logger.info(f'Starting cms-bot v{VERSION}')
     bot.start()

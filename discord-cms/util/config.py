@@ -4,7 +4,7 @@ import logging
 
 from .log import fatal_error
 
-logger = logging.getLogger('text-chat-bot')
+logger = logging.getLogger('cms-bot')
 
 CONFIG = os.getenv('CONFIG', 'config.json')
 

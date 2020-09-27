@@ -12,7 +12,7 @@ from ..database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-logger = logging.getLogger('text-chat-bot')
+logger = logging.getLogger('cms-bot')
 command_prefix = config.config['discord']['command_prefix']
 bot: commands.Bot = commands.Bot(command_prefix=command_prefix)
 
@@ -67,8 +67,6 @@ async def list_posts(ctx: commands.Context):
     for post in posts:
         ch = discord.TextChannel = ctx.guild.get_channel(int(post.channel))
         message: discord.Message = await ch.fetch_message(int(post.message))
-        # message: discord.Message = await ctx.guild.get_channel(
-        #     int(post.channel)).fetch_message(int(post.message))
         await ctx.send(message.jump_url)
     db.close()
 

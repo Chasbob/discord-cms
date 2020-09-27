@@ -7,7 +7,7 @@ SHELL_EXPORT := $(foreach v,$(MAKE_ENV),$(v)='$($(v))' )
 CONFIG       := $(shell $(SHELL_EXPORT) envsubst <config_template.json)
 
 PACKAGE       ?= bot
-DEFAULT_IMAGE ?= hackthemidlands/text-chat-bot
+DEFAULT_IMAGE ?= hackthemidlands/cms-bot
 VERSION       ?= $(shell git describe --tags --always --dirty --match="v*" 2> /dev/null || cat $(CURDIR)/.version 2> /dev/null || echo v0)
 DOCKER_REGISTRY_DOMAIN ?= docker.pkg.github.com
 DOCKER_REGISTRY_PATH   ?= chasbob/discord-cms
