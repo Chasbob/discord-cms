@@ -2,3 +2,5 @@
 certs/server.crt
 certs/server.key
 **/.env
+traefik/certs/server.crt
+traefik/certs/server.key

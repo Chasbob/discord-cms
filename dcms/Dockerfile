@@ -12,4 +12,5 @@ RUN poetry install --no-dev
 
 COPY . /opt/dcms/
 
+EXPOSE 80
 ENTRYPOINT [ "./docker-entrypoint.sh" ]

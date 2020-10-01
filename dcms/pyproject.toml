@@ -16,6 +16,7 @@ psycopg2 = "^2.8.6"
 httpx = "^0.15.4"
 starlette-authlib = "^0.1.6"
 "discord.py" = "^1.5.0"
+fastapi_contrib = {extras = ["all"], version = "^0.2.8"}
 
 [tool.poetry.dev-dependencies]
 yapf = "^0.30.0"

@@ -1,0 +1,86 @@
+version: "3.8"
+
+services:
+  traefik:
+    labels:
+      traefik.enable: "true"
+      # Traefik internal API
+      traefik.http.routers.dashboard.service: api@internal"
+      traefik.http.routers.dashboard.entrypoints: https"
+      traefik.http.routers.dashboard.tls: "true"
+      traefik.http.routers.dashboard.rule: Host(`traefik.$DOMAINNAME`)
+      # traefik.http.routers.dashboard.tls.certresolver: cloudflare-dns
+
+  adminer:
+    image: adminer
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      ## http routers
+      - "traefik.http.routers.db-rtr.entrypoints=https"
+      - "traefik.http.routers.db-rtr.rule=Host(`db.$DOMAINNAME`)"
+      - "traefik.http.routers.db-rtr.tls=true"
+    networks:
+      - db
+      - web
+
+  api:
+    build:
+      context: ./dcms
+      dockerfile: Dockerfile
+    volumes:
+      - ./dcms/dcms:/opt/dcms/dcms:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      ## http routers
+      - "traefik.http.routers.api-rtr.entrypoints=https"
+      - "traefik.http.routers.api-rtr.rule=Host(`api.$DOMAINNAME`) && PathPrefix(`$API_ROOT_PATH`)"
+      - "traefik.http.routers.api-rtr.tls=true"
+      - "traefik.http.middlewares.api-prefix.stripPrefix.prefixes=$API_ROOT_PATH"
+      ## middlewares
+      - "traefik.http.routers.api-rtr.middlewares=api-prefix"
+    environment:
+      DEBUG: "true"
+      DATABASE_URL: postgresql://user:pass@db/db
+      API_ROOT_PATH: $API_ROOT_PATH
+      DOMAINNAME: "$DOMAINNAME"
+
+  bot:
+    build:
+      context: ./cms_bot
+      dockerfile: Dockerfile
+    env_file: ./cms_bot/.env
+    environment:
+      DATABASE_URL: postgresql://user:pass@db/db
+    depends_on:
+      - db
+    networks:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_BASE: https://api.$DOMAINNAME$API_ROOT_PATH
+    restart: always
+    environment:
+      DEBUG: "true"
+      CI: "true"
+      REACT_APP_API_BASE: https://api.$DOMAINNAME$API_ROOT_PATH
+    volumes:
+      - ./frontend/public:/opt/frontend/public:ro
+      - ./frontend/src:/opt/frontend/src:ro
+    depends_on:
+      - api
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      ## http routers
+      - "traefik.http.routers.frontend-rtr.entrypoints=https"
+      - "traefik.http.routers.frontend-rtr.rule=Host(`$DOMAINNAME`)"
+      - "traefik.http.routers.frontend-rtr.tls=true"
+    networks:
+      - web
