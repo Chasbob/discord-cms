@@ -1,8 +1,21 @@
 from sqlalchemy import Column, ForeignKey, String, Integer, Boolean, DateTime
 from sqlalchemy.orm import relationship
 
-from dcms.crud.database import Base
+from .database import Base
 from sqlalchemy.sql.schema import CheckConstraint
+
+
+class Guild(Base):
+    __tablename__ = "guild"
+
+    id = Column(String, primary_key=True)
+    name = Column(String)
+    messages = relationship("Message", back_populates="guild")
+
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
 
 
 class User(Base):
@@ -29,6 +42,8 @@ class Message(Base):
     content = Column(String)
     user = relationship("User")
     user_id = Column(String, ForeignKey("user.id"))
+    guild_id = Column(String, ForeignKey("guild.id"))
+    guild = relationship("Guild", back_populates="messages")
 
     def update(self, **kwargs):
         for key, value in kwargs.items():
@@ -40,7 +55,6 @@ class Token(Base):
     __tablename__ = 'token'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(length=40))
     token_type = Column(String(length=40))
     access_token = Column(String(length=200))
     refresh_token = Column(String(length=200))

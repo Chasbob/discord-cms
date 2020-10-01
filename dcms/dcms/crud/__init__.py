@@ -11,6 +11,7 @@ from dcms.crud import models
 User = make_crud(models.User)
 Message = make_crud(models.Message)
 Token = make_crud(models.Token)
+Guild = make_crud(models.Guild)
 
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 

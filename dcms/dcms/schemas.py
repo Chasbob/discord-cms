@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class Message(BaseModel):
     name: str
     channel: str
-    message: str
+    content: str
 
     class Config:
         orm_mode = True
@@ -19,3 +19,8 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Guild(BaseModel):
+    id: str
+    name: str
