@@ -18,7 +18,10 @@ from starlette.config import Config
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 
-from dcms import crud, schemas
+from orm import crud
+
+from dcms import schemas
+
 
 config = Config()
 

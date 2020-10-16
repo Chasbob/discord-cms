@@ -9,8 +9,8 @@ from ..util import config
 from .updater import UpdateCog
 from sqlalchemy.orm import Session
 
-from cms_bot import crud
-from cms_bot.crud.database import SessionLocal, engine
+from orm import crud
+from orm.crud.database import SessionLocal, engine
 
 crud.models.Base.metadata.create_all(bind=engine)
 
