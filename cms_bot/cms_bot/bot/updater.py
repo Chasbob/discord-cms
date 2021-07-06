@@ -2,8 +2,8 @@ from discord.ext import tasks, commands
 import discord
 import logging
 
-from cms_bot import crud
-from cms_bot.crud.database import SessionLocal
+from orm import crud
+from orm.crud.database import SessionLocal
 
 
 class UpdateCog(commands.Cog):

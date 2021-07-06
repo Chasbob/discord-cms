@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  traefik:
+    environment:
+      CF_API_EMAIL: $CLOUDFLARE_EMAIL
+      CF_API_KEY: $CLOUDFLARE_API_KEY

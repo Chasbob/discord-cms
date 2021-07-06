@@ -4,9 +4,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from dcms.crud.base import make_crud
+from .base import make_crud
 
-from dcms.crud import models
+from . import models
 
 User = make_crud(models.User)
 Message = make_crud(models.Message)

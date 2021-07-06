@@ -3,11 +3,6 @@ version: "3.8"
 volumes:
   pgdata:
 
-networks:
-  web:
-    name: web
-  db:
-
 services:
   traefik:
     image: traefik:v2.3.1
@@ -22,12 +17,12 @@ services:
       - --entryPoints.https.address=:443
       - --entrypoints.http.http.redirections.entryPoint.to=https
       - --entrypoints.http.http.redirections.entryPoint.scheme=https
-      - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # uncomment when testing
-      - --certificatesResolvers.dns-cloudflare.acme.email=$CLOUDFLARE_EMAIL
-      - --certificatesResolvers.dns-cloudflare.acme.storage=/etc/traefik/acme/acme.json
-      - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
-      - --certificatesresolvers.dns-cloudflare.acme.dnschallenge=true
-      - --certificatesresolvers.dns-cloudflare.acme.dnschallenge.delaybeforecheck=10
+      # - --certificatesResolvers.dns-cloudflare.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory # uncomment when testing
+      # - --certificatesResolvers.dns-cloudflare.acme.email=$CLOUDFLARE_EMAIL
+      # - --certificatesResolvers.dns-cloudflare.acme.storage=/etc/traefik/acme/acme.json
+      # - --certificatesResolvers.dns-cloudflare.acme.dnsChallenge.provider=cloudflare
+      # - --certificatesresolvers.dns-cloudflare.acme.dnschallenge=true
+      # - --certificatesresolvers.dns-cloudflare.acme.dnschallenge.delaybeforecheck=10
     ports:
       - "80:80"
       - "443:443"
@@ -37,34 +32,31 @@ services:
       - ./traefik:/etc/traefik:ro
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      DOMAINNAME: "$DOMAINNAME"
-      CF_API_EMAIL: $CLOUDFLARE_EMAIL
-      CF_API_KEY: $CLOUDFLARE_API_KEY
-
-    networks:
-      - web
+      DOMAIN: "$DOMAIN"
 
   db:
-    image: postgres
+    build:
+      context: postgres
+      dockerfile: Dockerfile
     environment:
       POSTGRES_DB: db
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - db
 
   api:
     build:
-      context: ./dcms
-      dockerfile: prod.Dockerfile
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DIR: dcms
     labels:
       traefik.enable: "true"
       traefik.docker.network: web
       ## http routers
       traefik.http.routers.api-rtr.entrypoints: https
-      traefik.http.routers.api-rtr.rule: Host(`api.$DOMAINNAME`) && PathPrefix(`$API_ROOT_PATH`)
+      traefik.http.routers.api-rtr.rule: Host(`api.$DOMAIN`) && PathPrefix(`$API_ROOT_PATH`)
       traefik.http.routers.api-rtr.tls: "true"
       traefik.http.middlewares.api-prefix.stripPrefix.prefixes: $API_ROOT_PATH
       ## middlewares
@@ -72,25 +64,23 @@ services:
     environment:
       DATABASE_URL: postgresql://user:pass@db/db
       API_ROOT_PATH: $API_ROOT_PATH
-      DOMAINNAME: $DOMAINNAME
+      DOMAIN: $DOMAIN
       DISCORD_CLIENT_ID: $DISCORD_CLIENT_ID
       DISCORD_CLIENT_SECRET: $DISCORD_CLIENT_SECRET
     depends_on:
       - db
-    networks:
-      - db
-      - web
 
   bot:
     build:
-      context: ./cms_bot
-      dockerfile: prod.Dockerfile
-    env_file: ./cms_bot/.env
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DIR: cms_bot
     environment:
       DATABASE_URL: postgresql://user:pass@db/db
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN}
+      COMMAND_PREFIX: ${COMMAND_PREFIX}
     depends_on:
-      - db
-    networks:
       - db
 
   frontend:
@@ -98,7 +88,7 @@ services:
       context: ./frontend
       dockerfile: prod.Dockerfile
       args:
-        REACT_APP_API_BASE: https://api.$DOMAINNAME$API_ROOT_PATH
+        REACT_APP_API_BASE: https://api.$DOMAIN$API_ROOT_PATH
     restart: always
     depends_on:
       - api
@@ -107,7 +97,5 @@ services:
       traefik.docker.network: web
       ## http routers
       traefik.http.routers.frontend-rtr.entrypoints: https
-      traefik.http.routers.frontend-rtr.rule: Host(`$DOMAINNAME`)
+      traefik.http.routers.frontend-rtr.rule: Host(`$DOMAIN`)
       traefik.http.routers.frontend-rtr.tls: "true"
-    networks:
-      - web

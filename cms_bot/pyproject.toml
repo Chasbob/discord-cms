@@ -9,12 +9,12 @@ license = "MIT"
 python = "^3.8"
 "discord.py" = "^1.5.0"
 sqlalchemy = "^1.3.19"
-psycopg2 = {version = "^2.8.6", optional = true}
+psycopg2-binary = "^2.8.6"
 orm = {path = "../orm"}
 
 [tool.poetry.dev-dependencies]
 yapf = "^0.30.0"
-psycopg2-binary = "^2.8.6"
+psycopg2 = {version = "^2.8.6", optional = true}
 
 [build-system]
 requires = ["poetry>=0.12"]

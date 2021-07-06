@@ -17,13 +17,13 @@ starlette-authlib = "^0.1.6"
 "discord.py" = "^1.5.0"
 fastapi_contrib = {extras = ["all"], version = "^0.2.8"}
 orm = {path = "../orm"}
-psycopg2 = {version = "^2.8.6", optional = true}
+psycopg2-binary = "^2.8.6"
 
 [tool.poetry.dev-dependencies]
 yapf = "^0.30.0"
 pylint = "^2.6.0"
 jedi = "^0.17.2"
-psycopg2-binary = "^2.8.6"
+psycopg2 = {version = "^2.8.6", optional = true}
 
 [build-system]
 requires = ["poetry>=0.12"]
